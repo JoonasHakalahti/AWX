@@ -1,0 +1,27 @@
+- name: Configure UniFi switch via SSH
+  hosts: unifi_switch
+  gather_facts: no
+  vars:
+    ansible_user: ubnt
+    ansible_password: ubnt
+    ansible_connection: ssh
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+
+  tasks:
+    - name: Run show version
+      shell: show version
+      register: version_output
+
+    - name: Print version
+      debug:
+        var: version_output.stdout
+
+    - name: Set port 1 to access VLAN 10
+      shell: |
+        configure
+        interface 0/1
+        switchport mode access
+        switchport access vlan 10
+        exit
+        exit
+        write memory

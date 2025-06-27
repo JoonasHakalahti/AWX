@@ -1,0 +1,19 @@
+---
+- name: Configure Cisco IOS Switch
+  hosts: all
+  gather_facts: no
+  collections:
+    - cisco.ios
+
+  tasks:
+
+    - name: Create VLAN 100
+      ios_config:
+        lines:
+          - name Accounting
+        parents: vlan 100
+
+
+    - name: Save configuration
+      ios_config:
+        save_when: always
