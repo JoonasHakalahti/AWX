@@ -10,3 +10,7 @@
         vlan_id: 100
         name: TestVLAN
         state: present
+    
+    - name: Save configuration
+      community.network.procurve_config:
+        save_when: always
