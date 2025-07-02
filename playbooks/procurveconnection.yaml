@@ -1,6 +1,6 @@
 ---
 - name: Test SSH connection to ProCurve
-  hosts: all
+  hosts: 172.30.133.155
   gather_facts: no
   connection: ssh
 
