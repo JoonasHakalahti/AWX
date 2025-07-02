@@ -1,6 +1,6 @@
 ---
 - name: Test SSH connection to ProCurve
-  hosts: HP Procurve 2910 Switch Puuhanurkka
+  hosts: all
   gather_facts: no
   connection: network_cli
 
