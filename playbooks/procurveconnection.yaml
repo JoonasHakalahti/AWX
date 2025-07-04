@@ -6,21 +6,21 @@
 
   tasks:
     - name: Send dummy newline to clear "Press any key" prompt
-      ansible.builtin.raw: "\n"
+      raw: |
+        echo
       register: dummy
       ignore_errors: yes
 
     - name: Wait a moment for the prompt to be ready
-      ansible.builtin.wait_for:
+      wait_for:
         timeout: 2
 
-    - name: Retry show vlan until successful
-      ansible.builtin.raw: "show vlan"
+    - name: Retry "show vlan" until successful
+      raw: show vlan
       register: vlan_output
       retries: 3
       delay: 2
-      until: vlan_output is succeeded
-
+      until: vlan_output.rc == 0
 
     - name: Display VLAN output
       debug:
