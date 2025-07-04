@@ -1,20 +1,15 @@
----
-- name: Show VLANs using expect on ProCurve switch
+# playbooks/show_vlan.yml
+- name: Show VLANs on ProCurve
   hosts: all
   gather_facts: no
-  vars:
-    ansible_connection: ssh
 
   tasks:
-    - name: Send "show vlan" with expect
-      ansible.builtin.expect:
-        command: ssh -o StrictHostKeyChecking=no {{ inventory_hostname }}
-        responses:
-          'Press any key to continue': "\r"
-          '.*[>#]': "show vlan\r"
-        timeout: 10
-      register: output
+    - name: Run "show vlan" with an allocated pty
+      raw: show vlan
+      args:
+        pty: yes
+      register: vlan_out
 
-    - name: Show VLAN output
+    - name: Print VLAN output
       debug:
-        var: output.stdout_lines
+        var: vlan_out.stdout_lines 
