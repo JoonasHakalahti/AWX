@@ -1,15 +1,23 @@
-# playbooks/show_vlan.yml
-- name: Show VLANs on ProCurve
-  hosts: all
+# playbooks/show_vlan_expect.yml
+- name: Show VLANs on ProCurve via expect
+  hosts: procurve
   gather_facts: no
 
   tasks:
-    - name: Run "show vlan" with an allocated pty
-      raw: show vlan
-      args:
-        pty: yes
-      register: vlan_out
+    - name: Open SSH, log in, and run show vlan
+      expect:
+        # Open interactive SSH
+        command: ssh admin@{{ inventory_hostname }}
+        responses:
+          # Send password when prompted
+          'assword:': "{{ ansible_password }}"
+          # Once you see the real prompt (ends with #), send the command
+          '^.*#$': "show vlan"
+          # Then, to gracefully exit
+          '^.*#$': "exit"
+        timeout: 30
+      register: vlan_session
 
-    - name: Print VLAN output
+    - name: Print the VLAN output
       debug:
-        var: vlan_out.stdout_lines 
+        var: vlan_session.stdout_lines 
