@@ -1,6 +1,6 @@
 ---
 - name: Show VLANs via raw SSH
-  hosts: procurve
+  hosts: all
   gather_facts: no
 
   tasks:
