@@ -4,13 +4,23 @@
   gather_facts: no
 
   tasks:
-    - name: Run “show vlan”
-      raw: show vlan
-      register: vlan_out
+    - name: Send dummy newline to clear "Press any key" prompt
+      ansible.builtin.raw: "\n"
+      register: dummy
+      ignore_errors: yes
 
-    - name: Display VLANs
-      debug:
-        var: vlan_out.stdout_lines 
+    - name: Wait a moment for the prompt to be ready
+      ansible.builtin.wait_for:
+        timeout: 2
+
+    - name: Retry show vlan until successful
+      ansible.builtin.raw: "show vlan"
+      register: vlan_output
+      retries: 3
+      delay: 2
+      until: vlan_output is succeeded
+
+
+    - name: Display VLAN output
       debug:
         var: vlan_output.stdout_lines
-
