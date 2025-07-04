@@ -2,6 +2,7 @@
 - name: Show VLANs via raw SSH
   hosts: all
   gather_facts: no
+  connection: ssh
 
   tasks:
     - name: Send dummy newline to clear "Press any key" prompt
