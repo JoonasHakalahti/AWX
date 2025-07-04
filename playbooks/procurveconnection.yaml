@@ -1,9 +1,12 @@
----
-- name: Test SSH connection to ProCurve
-  hosts: all
+- name: Show VLANs via raw SSH
+  hosts: procurve
   gather_facts: no
-  connection: ssh
 
   tasks:
-    - name: Run 'show vlan'
-      ansible.builtin.shell: show vlan
+    - name: Run “show vlan”
+      raw: show vlan
+      register: vlan_out
+
+    - name: Display VLANs
+      debug:
+        var: vlan_out.stdout_lines 
