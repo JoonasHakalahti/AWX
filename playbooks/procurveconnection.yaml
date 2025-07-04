@@ -1,27 +1,20 @@
 ---
-- name: Show VLANs via raw SSH
+- name: Show VLANs using expect on ProCurve switch
   hosts: all
   gather_facts: no
-  connection: ssh
+  vars:
+    ansible_connection: ssh
 
   tasks:
-    - name: Send dummy newline to clear "Press any key" prompt
-      raw: |
-        echo
-      register: dummy
-      ignore_errors: yes
+    - name: Send "show vlan" with expect
+      ansible.builtin.expect:
+        command: ssh -o StrictHostKeyChecking=no {{ inventory_hostname }}
+        responses:
+          'Press any key to continue': "\r"
+          '.*[>#]': "show vlan\r"
+        timeout: 10
+      register: output
 
-    - name: Wait a moment for the prompt to be ready
-      wait_for:
-        timeout: 2
-
-    - name: Retry "show vlan" until successful
-      raw: show vlan
-      register: vlan_output
-      retries: 3
-      delay: 2
-      until: vlan_output.rc == 0
-
-    - name: Display VLAN output
+    - name: Show VLAN output
       debug:
-        var: vlan_output.stdout_lines
+        var: output.stdout_lines
