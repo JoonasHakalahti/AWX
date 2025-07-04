@@ -7,11 +7,16 @@
       ansible.builtin.raw: "\n"
       register: dummy
       ignore_errors: yes
-    
+
     - name: Wait for banner to finish
       ansible.builtin.wait_for:
         timeout: 2
-    
-    - name: Run “show vlan”
+
+    - name: Run show vlan
       ansible.builtin.raw: "show vlan"
+      register: vlan_output
+
+    - name: Show VLAN output
+      debug:
+        var: vlan_output.stdout
 
