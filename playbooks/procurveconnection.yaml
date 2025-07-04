@@ -3,10 +3,15 @@
   gather_facts: no
 
   tasks:
+    - name: Send dummy newline to clear MOTD
+      ansible.builtin.raw: "\n"
+      register: dummy
+      ignore_errors: yes
+    
+    - name: Wait for banner to finish
+      ansible.builtin.wait_for:
+        timeout: 2
+    
     - name: Run “show vlan”
-      raw: show vlan
-      register: vlan_out
+      ansible.builtin.raw: "show vlan"
 
-    - name: Display VLANs
-      debug:
-        var: vlan_out.stdout_lines 
