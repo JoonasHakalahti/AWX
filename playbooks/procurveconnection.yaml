@@ -1,25 +1,16 @@
 ---
-- name: Show VLANs with netmiko
-  hosts: all
+- name: Show VLANs via raw SSH
+  hosts: procurve
   gather_facts: no
-  connection: local
-
-  vars:
-    ansible_network_os: netmiko
-    ansible_connection: ansible.netcommon.network_cli
-    ansible_user: admin
-    ansible_password: your_password
-    ansible_ssh_host: "{{ inventory_hostname }}"
-    ansible_network_cli_ssh_type: ssh
 
   tasks:
-    - name: Run show vlan on HP ProCurve
-      ansible.netcommon.netmiko_command:
-        commands:
-          - show vlan
-      register: vlan_output
+    - name: Run “show vlan”
+      raw: show vlan
+      register: vlan_out
 
-    - name: Display VLAN output
+    - name: Display VLANs
+      debug:
+        var: vlan_out.stdout_lines 
       debug:
         var: vlan_output.stdout_lines
 
