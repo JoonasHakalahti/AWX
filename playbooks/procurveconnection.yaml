@@ -1,6 +1,6 @@
 # playbooks/show_vlan_expect.yml
 - name: Show VLANs on ProCurve via expect
-  hosts: procurve
+  hosts: all
   gather_facts: no
 
   tasks:
