@@ -4,20 +4,17 @@
   gather_facts: no
 
   tasks:
-    - name: Open SSH, log in, and run show vlan
-      expect:
-        # Open interactive SSH
+    - name: SSH in, run show vlan, exit
+      ansible.builtin.expect:
         command: ssh admin@{{ inventory_hostname }}
         responses:
-          # Send password when prompted
           'assword:': "{{ ansible_password }}"
-          # Once you see the real prompt (ends with #), send the command
-          '^.*#$': "show vlan"
-          # Then, to gracefully exit
-          '^.*#$': "exit"
+          '^[^#]+#$': |
+            show vlan
+            exit
         timeout: 30
       register: vlan_session
 
-    - name: Print the VLAN output
+    - name: Display VLAN output
       debug:
         var: vlan_session.stdout_lines 
