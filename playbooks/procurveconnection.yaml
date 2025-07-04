@@ -1,3 +1,4 @@
+---
 - name: Show VLANs via raw SSH
   hosts: all
   gather_facts: no
@@ -19,4 +20,3 @@
     - name: Show VLAN output
       debug:
         var: vlan_output.stdout
-
