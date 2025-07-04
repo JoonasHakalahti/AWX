@@ -4,11 +4,6 @@
   gather_facts: no
 
   tasks:
-    - name: Send dummy newline to clear MOTD
-      ansible.builtin.raw: "\n"
-      register: dummy
-      ignore_errors: yes
-
     - name: Wait for banner to finish
       ansible.builtin.wait_for:
         timeout: 2
