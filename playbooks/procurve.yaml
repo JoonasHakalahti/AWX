@@ -5,13 +5,11 @@
   connection: ssh
 
   tasks:
-    - name: Show Vlan
-      raw:  k
+    - name: Show Vlan #first raw clears press any key to continue
+      raw: k
       raw: show vlan
       register: vlan_o
         
     - name: output
       debug:
         var: vlan_o.stdout
-
-      
