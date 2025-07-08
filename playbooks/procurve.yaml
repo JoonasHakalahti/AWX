@@ -1,16 +1,9 @@
 ---
 - name: Test HP ProCurve Connection and Create VLAN
-  hosts: procurve-2910
+  hosts: all
   gather_facts: no
-  connection: network_cli
+  connection: ssh
 
   tasks:
-    - name: Create VLAN 100 with name TestVLAN
-      community.network.procurve_vlan:
-        vlan_id: 100
-        name: TestVLAN
-        state: present
-    
-    - name: Save configuration
-      community.network.procurve_config:
-        save_when: always
+    - name: Just connect
+      raw: " "
