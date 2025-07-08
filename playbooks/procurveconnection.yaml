@@ -5,16 +5,11 @@
 
   tasks:
     - name: Start background shell to keep session open
-      raw: "nohup /bin/sh >/dev/null 2>&1 &"
+      raw: "\r"
       ignore_errors: yes
 
     - name: Run show vlan via expect
-      expect:
-        command: ssh {{ ansible_user }}@{{ inventory_hostname }} "show vlan"
-        responses:
-          "Press any key": "\r"
-          ".*[#>]": "show vlan\r"
-        timeout: 15
+      raw: "show vlan"
       register: vlan_result
 
     - name: Display VLAN output
