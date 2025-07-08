@@ -1,5 +1,5 @@
 - name: HP ProCurve Commands
-  hosts: hp_switches
+  hosts: all
   gather_facts: no
   vars:
     ansible_connection: network_cli
