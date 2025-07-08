@@ -7,7 +7,7 @@
   tasks:
     - name: Show Vlan #first raw clears press any key to continue
       raw: k
-      ansible.builtin.raw: show vlan
+      raw: show vlan
       register: vlan_o
         
     - name: output
