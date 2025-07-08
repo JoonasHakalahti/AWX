@@ -1,22 +1,22 @@
-# playbooks/show_vlan_expect.yml
-- name: Show VLANs on ProCurve via expect
+- name: Keep SSH session alive via background shell
   hosts: all
   gather_facts: no
+  connection: ssh
 
   tasks:
-    - name: Prime session and handle press-any-key, then run "show vlan"
+    - name: Start background shell to keep session open
+      raw: "nohup /bin/sh >/dev/null 2>&1 &"
+      ignore_errors: yes
+
+    - name: Run show vlan via expect
       expect:
-        command: ssh {{ ansible_user }}@{{ inventory_hostname }} \
-                 -o StrictHostKeyChecking=no \
-                 "show vlan"
+        command: ssh {{ ansible_user }}@{{ inventory_hostname }} "show vlan"
         responses:
-          # Intercepts the auto "Press any key to continue" banner
           "Press any key": "\r"
-          # After CLI prompt appears, ansible sends the show vlan command
           ".*[#>]": "show vlan\r"
         timeout: 15
-      register: vlan_raw
+      register: vlan_result
 
-    - name: Display the VLAN information
+    - name: Display VLAN output
       debug:
-        var: vlan_raw.stdout_lines
+        var: vlan_result.stdout_lines
