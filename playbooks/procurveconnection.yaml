@@ -6,9 +6,6 @@
   tasks:
     - name: Start background shell to keep session open
       raw: "\r"
-      ignore_errors: yes
-
-    - name: Run show vlan via expect
       raw: "show vlan"
       register: vlan_result
 
