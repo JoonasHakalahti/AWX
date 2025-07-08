@@ -4,17 +4,19 @@
   gather_facts: no
 
   tasks:
-    - name: SSH in, run show vlan, exit
-      ansible.builtin.expect:
-        command: ssh admin@{{ inventory_hostname }}
+    - name: Prime session and handle press-any-key, then run "show vlan"
+      expect:
+        command: ssh {{ ansible_user }}@{{ inventory_hostname }} \
+                 -o StrictHostKeyChecking=no \
+                 "show vlan"
         responses:
-          'assword:': "{{ ansible_password }}"
-          '^[^#]+#$': |
-            show vlan
-            exit
-        timeout: 30
-      register: vlan_session
+          # Intercepts the auto "Press any key to continue" banner
+          "Press any key": "\r"
+          # After CLI prompt appears, ansible sends the show vlan command
+          ".*[#>]": "show vlan\r"
+        timeout: 15
+      register: vlan_raw
 
-    - name: Display VLAN output
+    - name: Display the VLAN information
       debug:
-        var: vlan_session.stdout_lines 
+        var: vlan_raw.stdout_lines
