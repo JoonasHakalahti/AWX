@@ -5,14 +5,32 @@
   connection: ssh
 
   tasks:
-    - name: Show Vlan #first raw clears press any key to continue
+    - name: Any key to continue
       raw: k
+      
+    - name: Enter config
       raw: configure
+      
+    - name: vlan id
       raw: vlan 100
+      
+    - name: vlan name
       raw: name "AWX TEST"
+
+    - name: backing
       raw: exit  
+
+    - name: again
       raw: exit
+
+    - name: write memory
       raw: write memory
+
+    - name: leaving enabled
       raw: exit
+
+    - name: logout
       raw: exit
+
+    - name: confirm
       raw: y
