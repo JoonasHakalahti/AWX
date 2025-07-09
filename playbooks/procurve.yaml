@@ -7,9 +7,12 @@
   tasks:
     - name: Show Vlan #first raw clears press any key to continue
       raw: k
-      raw: show vlan
-      register: vlan_o
-        
-    - name: output
-      debug:
-        var: vlan_o.stdout
+      raw: configure
+      raw: vlan 100
+      raw: name "AWX TEST"
+      raw: exit  
+      raw: exit
+      raw: write memory
+      raw: exit
+      raw: exit
+      raw: y
