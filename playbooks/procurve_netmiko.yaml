@@ -3,9 +3,9 @@
   connection: local
   gather_facts: no
   vars:
-    target_ip: "172.30.133.155"
-    target_user: "admin"
-    target_pass: "Koodaus1"
+    target_ip: "{{ ansible_host }}"
+    target_user: "{{ ansible_user }}"
+    target_pass: "{{ ansible_password }}"
   tasks:
     - name: Execute Netmiko Python script
       script:
