@@ -10,5 +10,5 @@ device = {
 }
 
 net_connect = ConnectHandler(**device)
-print(net_connect.send_command("show version"))
+print(net_connect.send_command("show vlan"))
 net_connect.disconnect()
