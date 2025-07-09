@@ -1,0 +1,17 @@
+- name: Run Netmiko script against HP ProCurve
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+    target_ip: "172.30.133.155"
+    target_user: "admin"
+    target_pass: "{{ vault_password }}"
+  tasks:
+    - name: Execute Netmiko Python script
+      script:
+        cmd: "{{ playbook_dir }}/procurve_netmiko.py {{ target_ip }} {{ target_user }} {{ target_pass }}"
+      register: output
+
+    - name: Display switch output
+      debug:
+        var: output.stdout_lines
