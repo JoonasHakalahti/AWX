@@ -5,8 +5,8 @@
   connection: ssh
 
   tasks:
-    - name: Any key to continue
-      raw: k
+   # - name: Any key to continue
+    #  raw: k
       
     - name: Enter config
       raw: configure
