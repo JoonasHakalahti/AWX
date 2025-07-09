@@ -1,15 +1,18 @@
-- name: HP ProCurve Commands
-  hosts: all
+- name: Run Netmiko logic via inline Python
+  hosts: localhost
   gather_facts: no
-  vars:
-    ansible_connection: network_cli
-    ansible_command_timeout: 30
-  
   tasks:
-    - name: Execute show vlan
-      ansible.netcommon.cli_command:
-        command: show vlan
-      register: vlan_info
-      
-    - debug:
-        var: vlan_info.stdout
+    - name: Connect to ProCurve switch and run show version
+      community.general.run_python:
+        code: |
+          from netmiko import ConnectHandler
+          device = {
+              "device_type": "hp_procurve",
+              "ip": "172.30.133.155",
+              "username": "admin",
+              "password": "yourpassword",
+          }
+          net_connect = ConnectHandler(**device)
+          output = net_connect.send_command("show version")
+          print(output)
+          net_connect.disconnect()
