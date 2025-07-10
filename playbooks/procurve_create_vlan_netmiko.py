@@ -1,5 +1,5 @@
-from netmiko import ConnectHandler
 import sys
+from netmiko import ConnectHandler
 
 device = {
   "device_type": "hp_procurve",
