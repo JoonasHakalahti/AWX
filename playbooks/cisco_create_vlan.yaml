@@ -1,0 +1,20 @@
+---
+- name: Configure Cisco IOS Switch
+  hosts: all
+  gather_facts: no
+  collections:
+    - cisco.ios
+  vars:
+    target_vlan_id: "{{ vlan_id }}"
+    target_vlan_name: "{{ vlan_name }}"
+
+  tasks:
+    - name: Create VLAN
+      ios_config:
+        parents: vlan {{ vlan_id }}
+        lines:
+          - name {{ vlan_name }}
+
+    - name: Save configuration
+      ios_config:
+        save_when: always

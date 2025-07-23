@@ -1,0 +1,30 @@
+---
+- name: Assign interfaces on Cisco
+  hosts: all
+  gather_facts: no
+  collections:
+    - cisco.ios  
+
+  vars:
+    target_vlan_id: "{{ vlan_id }}"
+    target_interfaces: "{{ interface_list }}"
+    target_mode: "{{ trunk_mode }}"
+  tasks:
+    - name: Create interfaces list
+      set_fact:
+        interfaces: "{{ target_interfaces.split(',') | map('trim') | list }}"
+
+    - name: Assign interfaces
+      ios_config:
+        parents: "interface Fa0/{{ interfaces[ansible_loop.index0] }}"
+        lines:
+            - switchport mode trunk
+            - switchport trunk {{ target_mode }} vlan {{ target_vlan_id }}
+            - no shutdown
+      loop: "{{ interfaces }}"
+      loop_control:
+        extended: true
+
+    - name: Save configuration
+      ios_config:
+        save_when: always

@@ -1,0 +1,18 @@
+- name: Show Vlans and ports using Netmiko
+  hosts: all
+  connection: local
+  gather_facts: no
+  vars:
+    target_ip: "{{ ansible_host }}"
+    target_user: "{{ ansible_user }}"
+    target_pass: "{{ ansible_password }}"
+
+  tasks:
+    - name: Execute Netmiko Python script
+      script:
+        cmd: "{{ playbook_dir }}/procurve_show_netmiko.py {{ target_ip }} {{ target_user }} {{ target_pass }}"
+      register: output
+
+    - name: Display switch output
+      debug:
+        var: output.stdout_lines

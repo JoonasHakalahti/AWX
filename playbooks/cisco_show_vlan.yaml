@@ -1,0 +1,16 @@
+---
+- name: Show Cisco VLANs
+  hosts: all
+  gather_facts: no
+  collections:
+    - cisco.ios
+
+  tasks:
+    - name: Run 'show vlan'
+      cisco.ios.ios_command:
+        commands: show vlan
+      register: vlan_output
+
+    - name: Print VLAN output
+      debug:
+        msg: "{{ vlan_output.stdout_lines[0] }}"

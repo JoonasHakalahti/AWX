@@ -1,0 +1,29 @@
+---
+- name: Factory reset Cisco vlan data
+  hosts: all
+  gather_facts: no
+  collections: cisco.ios
+
+  tasks:
+
+    - name: Delete vlan data
+      ios_command:
+        commands: delete /force vlan.dat
+
+    - name: Reset ports
+      ios_config:
+        lines: 
+          - default interface range GigabitEthernet0/1 - {{ Gigabit }}
+          - default interface range FastEthernet0/1 - {{ Fast }}
+
+    - name: Write to memory
+      ios_command:
+         commands: write memory
+
+
+    - name: reboot
+      ios_command:
+         commands: 
+          - command: reload
+            prompt: 'Proceed with reload?'
+            answer: y

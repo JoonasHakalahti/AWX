@@ -1,4 +1,4 @@
-- name: Create Vlan using Netmiko on Procurve
+- name: Assing interfaces using Netmiko
   hosts: all
   connection: local
   gather_facts: no
@@ -7,11 +7,13 @@
     target_user: "{{ ansible_user }}"
     target_pass: "{{ ansible_password }}"
     target_vlan_id: "{{ vlan_id }}"
-    target_vlan_name: "{{ vlan_name }}"
+    tag_status: "{{ tag_status }}"
+    target_interfaces: "{{ interface_list }}"
+
   tasks:
     - name: Execute Netmiko Python script
       script:
-        cmd: "{{ playbook_dir }}/procurve_create_vlan_netmiko.py {{ target_ip }} {{ target_user }} {{ target_pass }} {{ target_vlan_id }} {{ target_vlan_name }}"
+        cmd: "{{ playbook_dir }}/procurve_assing_interfaces_netmiko.py {{ target_ip }} {{ target_user }} {{ target_pass }} {{ target_vlan_id }} {{ target_interfaces }} {{ tag_status }}"
       register: output
 
     - name: Display switch output

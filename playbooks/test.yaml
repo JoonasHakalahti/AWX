@@ -1,0 +1,25 @@
+---
+- name: Factory reset Cisco vlan data
+  hosts: all
+  gather_facts: no
+  collections: cisco.ios
+
+  tasks:
+
+    - name: Delete startup config
+      ios_command:
+        commands: 
+          - command: erase startup-config
+            prompt: Erasing the nvram filesystem will remove all configuration files
+            answer: y
+    
+    - name: Enable ssh
+      ios_config:
+        parents: line vty 0 15
+        lines: 
+          - login local
+          - transport input ssh
+
+    - name: Write to memory
+      ios_command:
+         commands: write memory

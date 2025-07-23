@@ -20,9 +20,8 @@ config_commands = [
     f"name {vlan_name}",
 ]
 output = net_connect.send_config_set(config_commands)
-print(output)
 
-net_connect.save_config()  # optional
+net_connect.save_config()
 print(net_connect.send_command("show vlan"))
 
 net_connect.disconnect()
