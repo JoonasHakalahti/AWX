@@ -1,0 +1,29 @@
+---
+- name: Create vlan for Aruba
+  hosts: all
+  gather_facts: no
+  collections:
+    - arubanetworks.aos_switch
+
+  vars:
+    target_vlan: "{{ vlan_id }}"
+    target_name: "{{ vlan_name }}"
+    aruba_provider:
+      host: "{{ ansible_host }}"
+      username: "{{ ansible_user }}"
+      password: "{{ ansible_password }}"
+      validate_certs: false
+      use_ssl: true  # or true if HTTPS is supported
+      port: 443        # or 443 for HTTPS
+
+  tasks:
+    - name: Create vlan
+      arubaoss_command:
+        commands:
+          - configure
+          - vlan {{ target_vlan }}
+          - name {{ target_name }}
+          - exit
+          - exit
+          - write memory
+        provider: "{{ aruba_provider }}"

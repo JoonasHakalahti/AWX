@@ -1,0 +1,32 @@
+---
+- name: Get VLANs from Aruba
+  hosts: all
+  gather_facts: no
+  collections:
+    - arubanetworks.aos_switch
+
+  vars:
+    aruba_provider:
+      host: "{{ ansible_host }}"
+      username: "{{ ansible_user }}"
+      password: "{{ ansible_password }}"
+      validate_certs: false
+      use_ssl: true  # or true if HTTPS is supported
+      port: 443        # or 443 for HTTPS
+
+  tasks:
+    - name: Gather Aruba switch facts
+      arubaoss_command:
+        commands:
+          - show vlans
+          - show interfaces custom ethernet all port vlan status enabled type
+        provider: "{{ aruba_provider }}"
+      register: facts_output
+
+    - name: Display vlans
+      debug:
+        msg: "{{ facts_output.stdout_lines [0] }}"
+
+    - name: Display ports
+      debug:
+        msg: "{{ facts_output.stdout_lines [1] }}"

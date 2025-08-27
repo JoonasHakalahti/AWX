@@ -1,0 +1,43 @@
+---
+- name: Reset VLANs from Aruba
+  hosts: all
+  gather_facts: no
+  collections:
+    - arubanetworks.aos_switch
+
+  vars:
+    aruba_provider:
+      host: "{{ ansible_host }}"
+      username: "{{ ansible_user }}"
+      password: "{{ ansible_password }}"
+      use_ssl: true
+      port: 443
+      validate_certs: false
+      transport: aossapi
+
+
+  tasks:
+    - name: Gather vlans
+      arubaoss_facts:
+        gather_network_resources:
+          - vlans
+        provider: "{{ aruba_provider }}"
+      register: vlans_output
+
+#    - name: Show all top-level keys in returned facts 
+#      debug:
+#        var: vlans_output
+
+    - name: Delete all VLANs except VLAN 1
+      arubaoss_vlan:
+        vlan_id: "{{ item.vlan_id }}"
+        config: "delete"
+        provider: "{{ aruba_provider }}"
+      loop: "{{ vlans_output.ansible_facts.ansible_network_resources.vlans.vlan_element }}"
+      when: item.vlan_id != 1
+    
+    - name: Write memory
+      arubaoss_command:
+        commands:
+            - write memory
+        provider: "{{ aruba_provider }}"
