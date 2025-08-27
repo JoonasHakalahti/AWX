@@ -1,0 +1,40 @@
+---
+- name: Assign interfaces in Aruba
+  hosts: all
+  gather_facts: no
+  collections:
+    - arubanetworks.aos_switch
+
+  vars:
+    target_vlan: "{{ vlan_id }}"
+    target_interfaces: "{{ interface_list }}"
+    target_mode: "{{ port_mode }}"
+    aruba_provider:
+      host: "{{ ansible_host }}"
+      username: "{{ ansible_user }}"
+      password: "{{ ansible_password }}"
+      validate_certs: false
+      use_ssl: true  # or true if HTTPS is supported
+      port: 443        # or 443 for HTTPS
+
+  tasks:
+    - name: Create interfaces list
+      set_fact:
+        interfaces: "{{ target_interfaces.split(',') | map('trim') | list }}"
+
+    - name: Assign interfaces
+      arubaoss_command:
+        commands:
+          - configure
+          - vlan {{ target_vlan }} {{ target_mode }} {{ interfaces[ansible_loop.index0] }}
+          - exit
+        provider: "{{ aruba_provider }}"
+      loop: "{{ interfaces }}"
+      loop_control:
+        extended: true
+    
+    - name: Write memory
+      arubaoss_command:
+        commands:
+            - write memory
+        provider: "{{ aruba_provider }}"
